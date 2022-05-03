@@ -1,0 +1,68 @@
+/*
+    org_step2
+    ---------------------------
+
+    JaCaMo Project File
+
+    This file defines the initial state of the MAS (initial agents, environment, organisation, ....)
+
+    (see jacamo/doc/jcm.html for more information about what can be defined in this file)
+
+    JaCaMo <VERSION>
+    <DATE>
+*/
+
+mas exercise9 {
+
+
+    agent org_agent {
+    	join: server
+    }
+
+    agent sensing_agent_1 : sensing_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_2 : sensing_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_3 : sensing_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_4 : sensing_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_5 : rogue_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_6 : rogue_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_7 : rogue_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_8 : rogue_agent.asl {
+      join: server
+    }
+
+    agent sensing_agent_9 : rogue_leader_agent.asl {
+      join: server
+    }
+
+    agent acting_agent {
+      join: server
+    }
+
+    agent certification_agent {
+      join: server
+    }
+
+    workspace server {
+    }
+}
