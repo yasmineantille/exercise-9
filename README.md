@@ -40,12 +40,12 @@ For ensuring that your implementation of Exercise 8 is compatible with the templ
 ./gradlew task
 ```
 
-For Exercise 9 - Task 1:
+For Exercise 9 - Tasks 1-2:
 ```shell
 ./gradlew task1e9
 ```
 
-For Exercise 9 - Task 2:
+For Exercise 9 - Task 3-5:
 ```shell
 ./gradlew task2e9
 ```
