@@ -15,6 +15,14 @@ public class Converter extends Artifact {
         rescaledValue.set((int) rescaled);
     }
 
+    // Added this for exercise 9 double values since the called values here are different than expected in last exercise
+    @OPERATION
+    public void convertExercise9(double initValue, double sourceMin, double targetMin, double sourceMax, double targetMax, OpFeedbackParam<Double> rescaledValue) {
+        double rescaled = ((initValue - sourceMin) / (sourceMax - sourceMin) * (targetMax - targetMin) + targetMin);
+        System.out.println( rescaled);
+        rescaledValue.set(rescaled);
+    }
+
     // for quick testing
     public static void main(String[] args) {
         Converter converter = new Converter();

@@ -20,17 +20,41 @@ i_have_plans_for(R) :-
 	.print("Hello from ",Me).
 
 // Plan to achieve manifesting the air temperature using a robotic arm
-+!manifest_temperature : temperatureReading(TempValue)
++!manifest_temperature : .count(temperature(_)[source(_)],N) & N == 9
 <-
-  makeArtifact("converter", "tools.Converter", [], ConArtId);
+  	.print("All measurements received");
+	makeArtifact("converter", "tools.Converter", [], ConArtId);
 	focus(ConArtId);
-	convert(TempValue, -20, 200, 30, 830, RescaledValue);
+
+	makeArtifact("evaluator", "tools.SDBasedEvaluator", [], EvalArtId);
+	focus(EvalArtId); 
+	.findall([T,A], temperature(T)[source(A)], Temps);
+  	evaluateDeviations(Temps, Deviations, MinDeviation, MaxDeviation);
+	.my_name(MyName);
+
+	!certification;
+
+	// range is until 9-1 so 8
+  	for (.range(I,0,8)) {
+    	.nth(I, Deviations, D);
+    	.nth(I, Temps, T);
+    	convertExercise9(D, MinDeviation, MaxDeviation, -1, 1, Rating);
+    	+rating(I, MyName, "accuracy", temperature(T), Rating); 
+    	.print("Agent ", I, "with temperature ", T, " rated with ", Rating);
+  	}
+
+    .findall(r(Ag, temperature(BestValue), Rating), rating(Ag, _, "accuracy", temperature(BestValue), Rating), Ratings);
+    .max(Ratings, r(_, temperature(BestValue), _));
+
+	.print("Collected ratings", Ratings); 
+	.print("Best value ", BestValue);
+
+	convert(BestValue, -20, 200, 30, 830, RescaledValue);
 	.print("Temperature value rescaled: ", RescaledValue);
-	// .print("Mock temperature manifesting");
 
 	makeArtifact("robot", "wot.ThingArtifact", ["https://raw.githubusercontent.com/Interactions-HSG/example-tds/was/tds/leubot1.ttl"], RobotId);
-  setAPIKey("6f190351c8b12abfc209796400548b2f");
-  invokeAction("setWristAngle", ["value"], [RescaledValue]).
+  	setAPIKey("dbc245cc7ef7e3fe1a22b7ebae72a64f");
+  	invokeAction("setWristAngle", ["value"], [RescaledValue]).
 
 +organizationDeployed(OrgName, GroupName, SchemeName) : true <-
 	.print("Joining deployed organisation: ", OrgName);
@@ -42,14 +66,14 @@ i_have_plans_for(R) :-
 
 +!reasonAndAdoptRoles : role(R, _) & i_have_plans_for(R)
 <-
-  .print("Adopting role: ", R);
+  	.print("Adopting role: ", R);
 	adoptRole(R).
 
 +roleAvailable(R, OrgName): true
 <-
-  lookupArtifact(OrgName, OrgArtId);
-  focus(OrgArtId);
-  !reasonAndAdoptRoles.
+  	lookupArtifact(OrgName, OrgArtId);
+  	focus(OrgArtId);
+  	!reasonAndAdoptRoles.
 
 
 +obligation(Ag, MCond, committed(Ag,Mission,Scheme), Deadline) :
@@ -67,6 +91,17 @@ i_have_plans_for(R) :-
   !Goal[scheme(Scheme)];
   goalAchieved(Goal)[artifact_name(Scheme)].
 
+
++!certification : true
+<-
+	.findall(Agent,play(Agent,temperature_reader,_), Readers);
+    for (.range(I,0,.length(Readers)-1)) {
+		.nth(I, Readers, Agent);
+		.print("Sending out request for certificate to ", Agent);
+		.send(Agent, tell, getCertification);
+    };
+
+	.wait(2000).
 
 /*
 	The agent reacts when a new rating is added to its belief base by printing a relevant message

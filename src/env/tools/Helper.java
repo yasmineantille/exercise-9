@@ -22,7 +22,7 @@ public class Helper extends Artifact {
     @OPERATION
     public void computeReputationChange(int missionStartTime, int deadlineTime, int reputation, OpFeedbackParam<Double> out) {
         long timeRemaining = deadlineTime - date.getTime();
-        if (timeRemaining > 0) { 
+        if (timeRemaining > 0) {
             out.set(reputation + (1.0 / (date.getTime() - missionStartTime)));
         } else {
             out.set(reputation - 1.0);

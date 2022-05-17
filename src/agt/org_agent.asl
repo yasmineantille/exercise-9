@@ -19,7 +19,7 @@ has_enough_players_for(R) :-
   group_name(GroupName) &
   sch_name(SchemeName)
 <-
-  .print("I will initialize an organization ", OrgName, " with a group ", GroupName, " and a scheme ", SchemeName, " in workspace ", OrgName).
+  .print("I will initialize an organization ", OrgName, " with a group ", GroupName, " and a scheme ", SchemeName, " in workspace ", OrgName); 
   makeArtifact("crawler", "tools.HypermediaCrawler", ["https://api.interactions.ics.unisg.ch/hypermedia-environment/was/581b07c7dff45162"], CrawlerId);
   searchEnvironment("Monitor Temperature", DocumentPath);
   .print("Document for the relationType Monitor Temperature found: ", DocumentPath);

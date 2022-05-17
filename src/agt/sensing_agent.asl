@@ -23,12 +23,16 @@ i_have_plans_for(R) :-
 
 // Plan to achieve reading the air temperature using a robotic arm
 +!read_temperature : true <-
-.print("Reading temperature...");
-  makeArtifact("weatherStation", "wot.ThingArtifact", ["https://raw.githubusercontent.com/Interactions-HSG/example-tds/was/tds/weather-station.ttl"], WeatherStationId);
+	.print("Reading temperature...");
+	.my_name(Me);
+	.concat("weatherStation", Me, ArtName);
+	// A better naming convention would probably be nicer here (weatherStation1, weatherStation2, ...)
+	// but for simplicity left it like this
+  	makeArtifact(ArtName, "wot.ThingArtifact", ["https://raw.githubusercontent.com/Interactions-HSG/example-tds/was/tds/weather-station.ttl"], WeatherStationId);
 	focus(WeatherStationId);
 	readProperty("Temperature", _, Temperature);
-	.nth(0, Temperature, Temp);	// to read the first array entry (thanks Marc & Erik)
-	.broadcast(tell, temperatureReading(Temp));
+	.nth(0, Temperature, Temp);	
+	.broadcast(tell, temperature(Temp));
 	.print("Temperature reading (Celsius): ", Temp).
 
 +organizationDeployed(OrgName, GroupName, SchemeName) : true <-
@@ -85,6 +89,13 @@ i_have_plans_for(R) :-
 <-
 	.print("Received a certified reference from ", Ag, ": New ", C, " rating ", V, " for agent ", B, " who interacted with agent ", A, " in interaction ", I).
 
+
++getCertification[source(Sender)] :
+   certified_reference(rating(A, B, C, I, V), signedBy(Ag))
+   <-
+    if (V >= 0) {
+      .send(Sender, tell, certified_reference(rating(A, B, C, I, V), signedBy(Ag)))
+   }.
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
